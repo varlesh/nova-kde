@@ -1,0 +1,14 @@
+[SddmGreeterTheme]
+Name=Nova Terra
+Description=rounded material style
+Author=Alexey Varfolomeev
+Copyright=(c) 2022, Alexey Varfolomeev
+License=ISC
+Type=sddm-theme
+Version=20220521
+Website=https://github.com/varlesh/nova-kde
+Screenshot=screenshot.png
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=nova-terra
+Theme-API=2.0
