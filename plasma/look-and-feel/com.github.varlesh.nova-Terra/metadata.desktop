@@ -14,9 +14,8 @@ X-KDE-PluginInfo-Category=
 X-KDE-PluginInfo-Email=
 X-KDE-PluginInfo-License=GPLv3
 X-KDE-PluginInfo-Name=com.github.varlesh.nova-Terra
-X-KDE-PluginInfo-Version=20220123
+X-KDE-PluginInfo-Version=20220521
 X-KDE-PluginInfo-Website=https://github.com/varlesh/nova-kde
 X-KDE-fallbackPackage=org.kde.breeze.desktop
 X-Plasma-MainScript=defaults
-X-KPackage-Dependencies=kns://colorschemes.knsrc/api.kde-look.org/1659080,kns://plasma-themes.knsrc/api.kde-look.org/1659120,kns://aurorae.knsrc/api.kde-look.org/1659088,kns://icons.knsrc/api.kde-look.org/1651940,kns://wallpaper.knsrc/api.kde-look.org/1659076,kns://latte-layouts.knsrc/api.kde-look.org/1659115
-
+X-KPackage-Dependencies=kns://colorschemes.knsrc/api.kde-look.org/1659080,kns://plasma-themes.knsrc/api.kde-look.org/1659120,kns://aurorae.knsrc/api.kde-look.org/1659088,kns://icons.knsrc/api.kde-look.org/1651940,kns://wallpaper.knsrc/api.kde-look.org/1659076,kns://latte-layouts.knsrc/api.kde-look.org/1659115,kns://sddmtheme.knsrc/api.kde-look.org/1801240
