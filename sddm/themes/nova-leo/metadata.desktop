@@ -1,0 +1,14 @@
+[SddmGreeterTheme]
+Name=Nova Leo
+Description=rounded material style
+Author=Alexey Varfolomeev
+Copyright=(c) 2022, Alexey Varfolomeev
+License=ISC
+Type=sddm-theme
+Version=20220524
+Website=https://github.com/varlesh/nova-kde
+Screenshot=screenshot.png
+MainScript=Main.qml
+ConfigFile=theme.conf
+Theme-Id=nova-leo
+Theme-API=2.0
