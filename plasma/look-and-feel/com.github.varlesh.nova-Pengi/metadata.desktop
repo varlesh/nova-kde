@@ -18,6 +18,7 @@ X-KDE-PluginInfo-Version=20220521
 X-KDE-PluginInfo-Website=https://github.com/varlesh/nova-kde
 X-KDE-fallbackPackage=org.kde.breeze.desktop
 X-Plasma-MainScript=defaults
+X-Plasma-APIVersion=2
 X-KPackage-Dependencies=kns://colorschemes.knsrc/api.kde-look.org/1662810,kns://plasma-themes.knsrc/api.kde-look.org/1659120,kns://aurorae.knsrc/api.kde-look.org/1662814,kns://icons.knsrc/api.kde-look.org/1651940,kns://wallpaper.knsrc/api.kde-look.org/1662809,kns://latte-layouts.knsrc/api.kde-look.org/1659115,kns://sddmtheme.knsrc/api.kde-look.org/1801230
 
 

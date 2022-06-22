@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
+import QtQml 2.8
 import QtQuick 2.8
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
@@ -35,26 +36,58 @@ PlasmaCore.ColorScope {
 
     Connections {
         target: authenticator
-        onFailed: {
-            root.notification = i18nd("plasma_lookandfeel_org.kde.lookandfeel","Unlocking failed");
-        }
-        onGraceLockedChanged: {
-            if (!authenticator.graceLocked) {
-                root.notification = "";
-                root.clearPassword();
+        function onFailed() {
+            if (root.notification) {
+                root.notification += "\n"
             }
+            root.notification += i18nd("plasma_lookandfeel_org.kde.lookandfeel","Unlocking failed");
+            graceLockTimer.restart();
+            notificationRemoveTimer.restart();
         }
-        onMessage: {
+        function onSucceeded() {
+            Qt.quit();
+        }
+        
+        function onInfoMessage(msg) {
+            if (root.notification) {
+                root.notification += "\n"
+            }
+            root.notification += msg;
+        }
+
+        function onErrorMessage(msg) {
+            if (root.notification) {
+                root.notification += "\n"
+            }
+            root.notification += msg;
+        }
+        function onPrompt(msg) {
             root.notification = msg;
+            mainBlock.echoMode = TextInput.Normal
+            mainBlock.mainPasswordBox.text = "";
+            mainBlock.mainPasswordBox.forceActiveFocus();
         }
-        onError: {
-            root.notification = err;
+        function onPromptForSecret(msg) {
+            mainBlock.echoMode = TextInput.Password
+            mainBlock.mainPasswordBox.text = "";
+            mainBlock.mainPasswordBox.forceActiveFocus();
+        }
+    }
+    
+    SessionManagement {
+        id: sessionManagement
+    }
+
+    Connections {
+        target: sessionManagement
+        function onAboutToSuspend() {
+            root.clearPassword();
         }
     }
 
     SessionsModel {
         id: sessionsModel
-        showNewSessionEntry: true
+        showNewSessionEntry: false
     }
 
     PlasmaCore.DataSource {
@@ -91,7 +124,8 @@ PlasmaCore.ColorScope {
 
     MouseArea {
         id: lockScreenRoot
-
+        
+        property bool calledUnlock: false
         property bool uiVisible: false
         property bool blockUI: mainStack.depth > 1 || mainBlock.mainPasswordBox.text.length > 0
 
@@ -102,12 +136,15 @@ PlasmaCore.ColorScope {
         hoverEnabled: true
         drag.filterChildren: true
         onPressed: uiVisible = true;
-        onPositionChanged: uiVisible = true;
         onUiVisibleChanged: {
             if (blockUI) {
                 fadeoutTimer.running = false;
             } else if (uiVisible) {
                 fadeoutTimer.restart();
+            }
+            if (!calledUnlock) {
+                calledUnlock = true
+                authenticator.tryUnlock();
             }
         }
         onBlockUIChanged: {
@@ -136,6 +173,17 @@ PlasmaCore.ColorScope {
                     lockScreenRoot.uiVisible = false;
                 }
             }
+        }
+        
+        Timer {
+            id: notificationRemoveTimer
+            interval: 3000
+            onTriggered: root.notification = ""
+        }
+        Timer {
+            id: graceLockTimer
+            interval: 3000
+            onTriggered: authenticator.tryUnlock();
         }
 
         Component.onCompleted: PropertyAnimation { id: launchAnimation; target: lockScreenRoot; property: "opacity"; from: 0; to: 1; duration: 1000 }
@@ -257,12 +305,15 @@ PlasmaCore.ColorScope {
                 lockScreenUiVisible: lockScreenRoot.uiVisible
 
                 showUserList: userList.y + mainStack.y > 0
+                
+                enabled: !graceLockTimer.running
 
                 Stack.onStatusChanged: {
                     // prepare for presenting again to the user
                     if (Stack.status == Stack.Activating) {
                         mainPasswordBox.remove(0, mainPasswordBox.length)
                         mainPasswordBox.focus = true
+                        root.notification = ""
                     }
                 }
                 userListModel: users
@@ -278,9 +329,8 @@ PlasmaCore.ColorScope {
                     return text
                 }
 
-                onLoginRequest: {
-                    root.notification = ""
-                    authenticator.tryUnlock(password)
+                onPasswordResult: {
+                    authenticator.respond(password)
                 }
             }
             
@@ -307,14 +357,6 @@ PlasmaCore.ColorScope {
             active: true
             source: "PanelUI.qml"
         }
-
-            Component.onCompleted: {
-                if (defaultToSwitchUser) { //context property
-                    mainStack.push({
-                        item: switchSessionPage,
-                        immediate: true});
-                }
-            }
         }
 
         Component {
