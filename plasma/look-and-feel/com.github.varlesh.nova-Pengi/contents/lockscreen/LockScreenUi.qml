@@ -136,6 +136,7 @@ PlasmaCore.ColorScope {
         hoverEnabled: true
         drag.filterChildren: true
         onPressed: uiVisible = true;
+        onPositionChanged: uiVisible = true;
         onUiVisibleChanged: {
             if (blockUI) {
                 fadeoutTimer.running = false;
